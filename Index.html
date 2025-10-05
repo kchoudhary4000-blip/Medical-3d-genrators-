@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Medical 3D Generator</title>
+</head>
+<body style="text-align:center; font-family: Arial; margin-top:50px;">
+    <h1>Medical 3D Mechanism Generator</h1>
+    <input type="text" id="disease" placeholder="Enter disease or organelle" style="padding:10px; width:80%;" />
+    <br><br>
+    <button onclick="generateVideo()" style="padding:10px 20px;">Generate 3D Video</button>
+    <p id="status"></p>
+    <video id="videoPlayer" controls width="90%" style="margin-top:20px; display:none;"></video>
+
+    <script>
+        async function generateVideo() {
+            const disease = document.getElementById('disease').value;
+            if(!disease) { alert("Please enter disease name"); return; }
+            document.getElementById('status').innerText = "Generating video...";
+
+            const response = await fetch('https://YOUR_CLOUD_SERVER_URL/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ disease })
+            });
+
+            const data = await response.json();
+            document.getElementById('status').innerText = "";
+            const videoPlayer = document.getElementById('videoPlayer');
+            videoPlayer.src = data.video_url;
+            videoPlayer.style.display = 'block';
+            videoPlayer.play();
+        }
+    </script>
+</body>
+</html>
